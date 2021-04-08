@@ -1,0 +1,9 @@
+# Testing and code checking
+python-ta~=1.6.3
+
+# Graph
+networkx
+
+# Plotting
+matplotlib
+plotly
