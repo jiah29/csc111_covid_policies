@@ -7,3 +7,6 @@ networkx
 # Plotting
 matplotlib
 plotly
+
+# Simulation & user-interface
+pygame
