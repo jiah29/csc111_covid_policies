@@ -67,6 +67,9 @@ class _WeightedVertex:
         """Calculate the weight of the edge based on how similar the countries' COVID-19
         policies are.
 
+        The weight is calculated by (num of same policies level / total num of policies).
+        The total number of policies is always 7.
+
         Preconditions:
             - has_same_policy(self, other) == True
 
