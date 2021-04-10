@@ -39,8 +39,9 @@ class _WeightedVertex:
                                 edge weight representing how similar their policies are
 
         Representation Invariants:
-            - self not in self.neighbours
-            - all(self in u.neighbours for u in self.neighbours)
+            - self not in self.similar_policies
+            - all(self in u.similar_policies for u in self.similar_policies)
+            - all(self.similar_policies[edge] > 0 for edge in self.similar_policies)
     """
     country_name: str
     new_cases: list[float]
@@ -109,7 +110,12 @@ class _WeightedVertex:
 
 
 class WeightedGraph:
-    """A weighted graph representing a network linking countries with similar COVID-19 policies"""
+    """A weighted graph representing a network linking countries with similar COVID-19 policies
+
+    Representation Invariants:
+        - all edge in the graph has weight > 0
+        (python code representation invariant in _WeightedVertex class)
+    """
     # Private Instance Attributes:
     #     - _vertices:
     #         A collection of the vertices contained in this graph.
@@ -188,7 +194,9 @@ class WeightedGraph:
         restriction level).
 
         If an edge already exists between two countries, do nothing. The function will also
-        call the vertex's calculate_weight method to calculate the weight of the edge.
+        call the vertex's calculate_weight method to calculate the weight of the edge. Note
+        that in this graph, every edge must have a weight of more than 0 as only countries
+        that have at least one same level of policy are connected.
 
         This function makes use of the _WeightedVertex.has_same_policy method.
         """
