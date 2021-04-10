@@ -140,6 +140,8 @@ class WeightedGraph:
     def add_vertex_restrictions(self, country: str, policy: str, level: int) -> None:
         """Add the restriction level of a policy to the restrictions_level dict of the vertex.
 
+        This function makes use of the _WeightedVertex.restrictions_level method.
+
         If country is not in the graph, do nothing.
 
         >>> s = WeightedGraph()
@@ -187,6 +189,8 @@ class WeightedGraph:
 
         If an edge already exists between two countries, do nothing. The function will also
         call the vertex's calculate_weight method to calculate the weight of the edge.
+
+        This function makes use of the _WeightedVertex.has_same_policy method.
         """
         v1 = self._vertices[country1]
         v2 = self._vertices[country2]
@@ -194,8 +198,7 @@ class WeightedGraph:
         if v2 in v1.similar_policies:
             return
         else:
-            connection = any(v1.restrictions_level[policy] == v2.restrictions_level[policy]
-                             for policy in v1.restrictions_level)
+            connection = v1.has_same_policy(v2)
 
             if connection:
                 v1.similar_policies[v2] = v1.calculate_weight(v2)
