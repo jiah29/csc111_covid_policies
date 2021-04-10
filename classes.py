@@ -4,7 +4,7 @@ Instructions (READ THIS FIRST!)
 ===============================
 
 This Python module contains the information and methods of
-the two main classes used in this project.
+the two main classes (and an exception class) used in this project.
 
 Do not edit any function in this module.
 
@@ -28,11 +28,11 @@ class _WeightedVertex:
         Instance Attributes:
             - country_name: The name of the country
             - new_cases: The list of number of new cases every day from February 24, 2020
-                         to March 13, 2021
+                         to March 13, 2021. If the data for any day in unavailable, it will
+                         be represented with an empty string ''.
             - new_deaths: The list of number of new deaths every day from February 24, 2020
-                          to March 13, 2021
-            - vaccinations_count: The list of the total number of vaccinations per hundred
-                                  every day from February 24, 2020 to March 13, 2021
+                          to March 13, 2021. If the data for any day in unavailable, it will
+                         be represented with an empty string ''.
             - population: The size of the population
             - restrictions_level: The mapping of each policy to its level of restriction
             - similar_policies: The neighbours of the country in the graph, and their corresponding
@@ -44,14 +44,20 @@ class _WeightedVertex:
             - all(self.similar_policies[edge] > 0 for edge in self.similar_policies)
     """
     country_name: str
-    new_cases: list[float]
-    new_deaths: list[float]
+    new_cases: list[Union[float, str]]
+    new_deaths: list[Union[float, str]]
     population: int
     restrictions_level: dict[str, int]
     similar_policies: dict[_WeightedVertex, Union[int, float]]
 
     def __init__(self, country: str, cases: list[float],
                  deaths: list[float], population: int) -> None:
+        """Initialise a weighted vertex representing a country.
+
+        Preconditions:
+            - population >= 10000
+            - len(cases) == len(deaths)
+        """
         self.country_name = country
         self.new_cases = cases
         self.new_deaths = deaths
@@ -60,7 +66,13 @@ class _WeightedVertex:
         self.similar_policies = {}
 
     def add_restrictions(self, policy: str, level: int) -> None:
-        """Add the restriction level of a policy to the restrictions_level dict"""
+        """Add the restriction level of a policy to the restrictions_level dict
+
+        Preconditions:
+            - policy in ['face_covering', 'public_campaigns', 'events_cancellation',
+            'schools_workplaces_closure', 'stay_at_home', 'testing', 'vaccination']
+            - 0 <= level <= 6
+        """
         if policy not in self.restrictions_level:
             self.restrictions_level[policy] = level
 
@@ -72,12 +84,12 @@ class _WeightedVertex:
         The total number of policies is always 7.
 
         Preconditions:
-            - has_same_policy(self, other) == True
+            - self.has_same_policy(other) == True
 
-        >>> c1 = _WeightedVertex('Country1', [0.1], [0.1], 100)
+        >>> c1 = _WeightedVertex('Country1', [0.1], [0.1], 100000)
         >>> c1.restrictions_level['Policy'] = 2
         >>> c1.restrictions_level['Policy2'] = 3
-        >>> c2 = _WeightedVertex('Country2', [0.1], [0.1], 100)
+        >>> c2 = _WeightedVertex('Country2', [0.1], [0.1], 100000)
         >>> c2.restrictions_level['Policy'] = 2
         >>> c2.restrictions_level['Policy2'] = 3
         >>> c1.calculate_weight(c2) == 2/7
@@ -95,9 +107,13 @@ class _WeightedVertex:
         """Return whether the country has at least one same policy restriction level as
         other's country
 
-        >>> c1 = _WeightedVertex('Country1', [0.1], [0.1], 100)
+        Preconditions:
+            - all(policy in other.restrictions_level for policy in self.restrictions_level)
+            - all(policy in self.restrictions_level for policy in other.restrictions_level)
+
+        >>> c1 = _WeightedVertex('Country1', [0.1], [0.1], 100000)
         >>> c1.restrictions_level['Policy'] = 2
-        >>> c2 = _WeightedVertex('Country2', [0.1], [0.1], 100)
+        >>> c2 = _WeightedVertex('Country2', [0.1], [0.1], 100000)
         >>> c2.restrictions_level['Policy'] = 2
         >>> c1.has_same_policy(c2)
         True
@@ -133,12 +149,16 @@ class WeightedGraph:
         The vertex is not adjacent to any other vertex when added. Do
         nothing if the vertex is already in the graph.
 
+        Preconditions:
+            - population >= 10000
+            - len(cases) == len(deaths)
+
         >>> s = WeightedGraph()
-        >>> s.add_vertex('Country', [0.1], [0.1], 100)
+        >>> s.add_vertex('Country', [0.1], [0.1], 100000)
         >>> 'Country' in s._vertices
         True
         >>> s._vertices['Country'].population
-        100
+        100000
         """
         if country not in self._vertices:
             self._vertices[country] = _WeightedVertex(country, cases, deaths, population)
@@ -148,32 +168,39 @@ class WeightedGraph:
 
         This function makes use of the _WeightedVertex.restrictions_level method.
 
-        If country is not in the graph, do nothing.
+        If country is not in the graph, raise an error message.
+
+        Preconditions:
+            - policy in ['face_covering', 'public_campaigns', 'events_cancellation',
+            'schools_workplaces_closure', 'stay_at_home', 'testing', 'vaccination']
+            - 0 <= level <= 6
 
         >>> s = WeightedGraph()
-        >>> s.add_vertex('Country', [0.1], [0.1], 100)
-        >>> s.add_vertex_restrictions('Country', 'Policy1', 3)
-        >>> s._vertices['Country'].restrictions_level['Policy1']
+        >>> s.add_vertex('Country', [0.1], [0.1], 100000)
+        >>> s.add_vertex_restrictions('Country', 'face_covering', 3)
+        >>> s._vertices['Country'].restrictions_level['face_covering']
         3
         """
         if country in self._vertices:
             self._vertices[country].add_restrictions(policy, level)
+        else:
+            raise CountryNotInGraphError(country)
 
     def find_and_add_edge(self, country: str) -> None:
         """Find and add possible edges between the country and all other countries in the graph.
         A edge can be formed when both countries have similar policy (has at least one same policy
         restriction level).
 
-        If the country is not in the graph, do nothing.
+        If the country is not in the graph, raise a error message.
 
         The main chunk of this function is done in the add_edge helper function. Refer
         to the specification of that function for more details.
 
         >>> s = WeightedGraph()
-        >>> s.add_vertex('Country1', [0.1], [0.1], 100)
-        >>> s.add_vertex('Country2', [0.1], [0.1], 100)
-        >>> s.add_vertex_restrictions('Country1', 'Policy1', 3)
-        >>> s.add_vertex_restrictions('Country2', 'Policy1', 3)
+        >>> s.add_vertex('Country1', [0.1], [0.1], 100000)
+        >>> s.add_vertex('Country2', [0.1], [0.1], 100000)
+        >>> s.add_vertex_restrictions('Country1', 'face_covering', 3)
+        >>> s.add_vertex_restrictions('Country2', 'face_covering', 3)
         >>> s.find_and_add_edge('Country1')
         >>> s._vertices['Country2'] in s._vertices['Country1'].similar_policies
         True
@@ -187,6 +214,8 @@ class WeightedGraph:
                 v2 = self._vertices[country2]
                 if v1 != v2:
                     self.add_edge(v1.country_name, v2.country_name)
+        else:
+            raise CountryNotInGraphError(country)
 
     def add_edge(self, country1: str, country2: str) -> None:
         """Helper function for find_and_add_edge. This helper function add edge between the
@@ -199,6 +228,10 @@ class WeightedGraph:
         that have at least one same level of policy are connected.
 
         This function makes use of the _WeightedVertex.has_same_policy method.
+
+        Preconditions:
+            - country1 in self._vertices
+            - country2 in self._vertices
         """
         v1 = self._vertices[country1]
         v2 = self._vertices[country2]
@@ -210,6 +243,28 @@ class WeightedGraph:
 
             if connection:
                 v1.similar_policies[v2] = v1.calculate_weight(v2)
+
+
+class CountryNotInGraphError(Exception):
+    """Exception raised for errors in the WeightedGraph methods when a vertex
+       is not in the graph.
+
+        Instance Attributes:
+            - country: The name of the country
+            - message: The message returned when error is raised
+    """
+    country: str
+    message: str
+
+    def __init__(self, country: str) -> None:
+        self.country = country
+        self.message = self.country + ' is not in the graph.'
+
+        # To satisfy pyta condition
+        Exception.__init__(self)
+
+    def __str__(self) -> str:
+        return self.message
 
 
 if __name__ == '__main__':
