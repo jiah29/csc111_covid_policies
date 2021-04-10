@@ -45,7 +45,6 @@ class _WeightedVertex:
     country_name: str
     new_cases: list[float]
     new_deaths: list[float]
-    vaccinations_count: list[float]
     population: int
     restrictions_level: dict[str, int]
     similar_policies: dict[_WeightedVertex, Union[int, float]]
@@ -59,7 +58,7 @@ class _WeightedVertex:
         self.restrictions_level = {}
         self.similar_policies = {}
 
-    def add_restrictions(self, policy: str, level: int):
+    def add_restrictions(self, policy: str, level: int) -> None:
         """Add the restriction level of a policy to the restrictions_level dict"""
         if policy not in self.restrictions_level:
             self.restrictions_level[policy] = level
@@ -70,20 +69,37 @@ class _WeightedVertex:
 
         Preconditions:
             - has_same_policy(self, other) == True
+
+        >>> c1 = _WeightedVertex('Country1', [0.1], [0.1], 100)
+        >>> c1.restrictions_level['Policy'] = 2
+        >>> c1.restrictions_level['Policy2'] = 3
+        >>> c2 = _WeightedVertex('Country2', [0.1], [0.1], 100)
+        >>> c2.restrictions_level['Policy'] = 2
+        >>> c2.restrictions_level['Policy2'] = 3
+        >>> c1.calculate_weight(c2) == 2/7
+        True
         """
         num_same_level = 0
 
-        for policy in self.similar_policies:
-            if self.similar_policies[policy] == other.similar_policies[policy]:
+        for policy in self.restrictions_level:
+            if self.restrictions_level[policy] == other.restrictions_level[policy]:
                 num_same_level += 1
 
-        return num_same_level / len(self.similar_policies)
+        return num_same_level / 7
 
     def has_same_policy(self, other: _WeightedVertex) -> bool:
         """Return whether the country has at least one same policy restriction level as
-        other's country"""
-        for policy in self.similar_policies:
-            if self.similar_policies[policy] == other.similar_policies[policy]:
+        other's country
+
+        >>> c1 = _WeightedVertex('Country1', [0.1], [0.1], 100)
+        >>> c1.restrictions_level['Policy'] = 2
+        >>> c2 = _WeightedVertex('Country2', [0.1], [0.1], 100)
+        >>> c2.restrictions_level['Policy'] = 2
+        >>> c1.has_same_policy(c2)
+        True
+        """
+        for policy in self.restrictions_level:
+            if self.restrictions_level[policy] == other.restrictions_level[policy]:
                 return True
 
         return False
@@ -107,6 +123,13 @@ class WeightedGraph:
 
         The vertex is not adjacent to any other vertex when added. Do
         nothing if the vertex is already in the graph.
+
+        >>> s = WeightedGraph()
+        >>> s.add_vertex('Country', [0.1], [0.1], 100)
+        >>> 'Country' in s._vertices
+        True
+        >>> s._vertices['Country'].population
+        100
         """
         if country not in self._vertices:
             self._vertices[country] = _WeightedVertex(country, cases, deaths, population)
@@ -115,19 +138,36 @@ class WeightedGraph:
         """Add the restriction level of a policy to the restrictions_level dict of the vertex.
 
         If country is not in the graph, do nothing.
+
+        >>> s = WeightedGraph()
+        >>> s.add_vertex('Country', [0.1], [0.1], 100)
+        >>> s.add_vertex_restrictions('Country', 'Policy1', 3)
+        >>> s._vertices['Country'].restrictions_level['Policy1']
+        3
         """
         if country in self._vertices:
             self._vertices[country].add_restrictions(policy, level)
 
     def find_and_add_edge(self, country: str) -> None:
         """Find and add possible edges between the country and all other countries in the graph.
-        A edge cam be formed when both countries have similar policy (has at least one same policy
+        A edge can be formed when both countries have similar policy (has at least one same policy
         restriction level).
 
         If the country is not in the graph, do nothing.
 
         The main chunk of this function is done in the add_edge helper function. Refer
-        to the specification that function for more details.
+        to the specification of that function for more details.
+
+        >>> s = WeightedGraph()
+        >>> s.add_vertex('Country1', [0.1], [0.1], 100)
+        >>> s.add_vertex('Country2', [0.1], [0.1], 100)
+        >>> s.add_vertex_restrictions('Country1', 'Policy1', 3)
+        >>> s.add_vertex_restrictions('Country2', 'Policy1', 3)
+        >>> s.find_and_add_edge('Country1')
+        >>> s._vertices['Country2'] in s._vertices['Country1'].similar_policies
+        True
+        >>> s._vertices['Country1'].similar_policies[s._vertices['Country2']] == 1/7
+        True
         """
         if country in self._vertices:
             v1 = self._vertices[country]
@@ -156,3 +196,17 @@ class WeightedGraph:
 
             if connection:
                 v1.similar_policies[v2] = v1.calculate_weight(v2)
+
+
+if __name__ == '__main__':
+    import python_ta.contracts
+    python_ta.contracts.check_all_contracts()
+
+    import doctest
+    doctest.testmod(verbose=True)
+
+    import python_ta
+    python_ta.check_all(config={
+        'max-line-length': 100,
+        'disable': ['E1136']
+    })
