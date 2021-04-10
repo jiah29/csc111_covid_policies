@@ -4,7 +4,9 @@ Instructions (READ THIS FIRST!)
 ===============================
 
 This Python module contains functions that initialise a graph
-based on real world data in the datasets folder.
+based on real world data in the datasets folder. It also contains
+a exception class that inherits from CountryNotInGraphError class from
+classes.py.
 
 Do not edit anything in this module.
 
