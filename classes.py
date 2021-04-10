@@ -43,7 +43,7 @@ class _WeightedVertex:
         Representation Invariants:
             - self not in self.similar_policies
             - all(self in u.similar_policies for u in self.similar_policies)
-            - all(self.similar_policies[edge] > 0 for edge in self.similar_policies)
+            - all(0 < self.similar_policies[edge] <= 1 for edge in self.similar_policies)
     """
     country_name: str
     new_cases: list[Union[float, str]]
@@ -132,7 +132,7 @@ class WeightedGraph:
     """A weighted graph representing a network linking countries with similar COVID-19 policies
 
     Representation Invariants:
-        - all edge in the graph has weight > 0
+        - all edge in the graph has 0 < weight <= 1
         (python code representation invariant in _WeightedVertex class)
     """
     # Private Instance Attributes:
