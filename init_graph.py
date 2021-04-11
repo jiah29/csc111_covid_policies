@@ -191,6 +191,12 @@ def get_real_graph() -> WeightedGraph:
     return graph
 
 
+def get_modified_graph() -> WeightedGraph:
+    """Initialise a WeightedGraph based on a modified, smaller datasets.
+    Run this function instead of get_real_graph for quicker run time."""
+    # TODO
+
+
 class CountryNotFound(CountryNotInGraphError):
     """Exceptions raised when the country is not found in a file. This class inherit from
     CountryNotInGraphError"""

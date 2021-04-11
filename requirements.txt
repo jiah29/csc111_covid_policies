@@ -5,8 +5,8 @@ python-ta~=1.6.3
 networkx
 
 # Plotting
-matplotlib
 plotly
 
 # Simulation & user-interface
 pygame
+
