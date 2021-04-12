@@ -238,7 +238,6 @@ class WeightedGraph:
 
         Preconditions:
             - population >= 100
-            - len(cases) == len(deaths)
 
         >>> s = WeightedGraph()
         >>> s.add_vertex('Country', [0.1], [0.1], 100000)
