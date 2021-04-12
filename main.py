@@ -19,3 +19,25 @@ are expressly prohibited.
 
 This file is Copyright (c) 2021 Jia Hao Choo & Komal Saini.
 """
+from init_graph import get_real_graph
+from plot_networks import visualise
+from computations import get_total_average_case_growth, get_total_average_deaths_growth
+
+
+if __name__ == '__main__':
+
+    #  lists of policy =
+    #  ['face-covering-policies', 'public-campaigns-covid', 'public-events-cancellation',
+    #  'school-workplace-closures', 'stay-at-home', 'testing-policy', 'vaccination-policy']
+
+    real_graph = get_real_graph()
+
+    visualise('public-events-cancellation', real_graph)
+    visualise('face-covering-policies', real_graph)
+    visualise('public-campaigns-covid', real_graph)
+    visualise('school-workplace-closures', real_graph)
+    visualise('stay-at-home', real_graph)
+    visualise('testing-policy', real_graph)
+    visualise('vaccination-policy', real_graph)
+
+    # get_total_average_case_growth(real_graph, {'face-covering-policies': 2})

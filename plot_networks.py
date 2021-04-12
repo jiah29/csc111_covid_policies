@@ -997,14 +997,3 @@ if __name__ == '__main__':
         'extra-imports': ['classes', 'csv', 'networkx', 'plotly.graph_objects'],
         'disable': ['E1136'],
     })
-
-    # from init_graph import get_real_graph
-    #
-    # g = get_real_graph()
-    # visualise('public-events-cancellation', g)
-    # visualise('face-covering-policies', g)
-    # visualise('public-campaigns-covid', g)
-    # visualise('school-workplace-closures', g)
-    # visualise('stay-at-home', g)
-    # visualise('testing-policy', g)
-    # visualise('vaccination-policy', g)

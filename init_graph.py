@@ -49,8 +49,6 @@ def get_main_data(filename: str, data: str) -> dict[str, list[Union[str, float]]
     data argument from the csv file. Each number either represent the daily new cases
     or new deaths from a specific starting data to March 13, 2021.
 
-    If any data is unavailable, it will be represented with an empty string: ''.
-
     Preconditions:
         - filename.startswith('datasets/')
         - filename.endswith('.csv')
