@@ -20,6 +20,7 @@ This file is Copyright (c) 2021 Jia Hao Choo & Komal Saini.
 """
 from __future__ import annotations
 from typing import Union
+import statistics
 
 
 class _WeightedVertex:
@@ -28,11 +29,9 @@ class _WeightedVertex:
         Instance Attributes:
             - country_name: The name of the country
             - new_cases: The list of number of new cases every day from a specific starting data
-                         to a specific ending data. If the data for any day in unavailable, it will
-                         be represented with an empty string ''.
+                         to a specific ending data.
             - new_deaths: The list of number of new deaths every day from a specific starting data
-                         to a specific ending data. If the data for any day in unavailable, it will
-                         be represented with an empty string ''.
+                         to a specific ending data.
             - population: The size of the population
             - restrictions_level: The mapping of each policy to its level of restriction. If a
                                   restriction level is not available, it will be represented with a
@@ -46,8 +45,8 @@ class _WeightedVertex:
             - all(0 < self.similar_policies[edge] <= 1 for edge in self.similar_policies)
     """
     country_name: str
-    new_cases: list[Union[float, str]]
-    new_deaths: list[Union[float, str]]
+    new_cases: list[float]
+    new_deaths: list[float]
     population: int
     restrictions_level: dict[str, Union[int, str]]
     similar_policies: dict[_WeightedVertex, Union[int, float]]
@@ -153,6 +152,64 @@ class _WeightedVertex:
                 returned.append(neighbour.country_name)
 
         return returned
+
+    def get_neighbour_averages_cases(self, policy: str, level: int, visited: set[_WeightedVertex]) \
+            -> list[float]:
+        """Return the averages of daily new cases of the neighbours of the vertex by traversing
+        through the neighbour of the neighbour. The average daily new cases is calculated by taking
+        an average of all the new cases of the vertex multiplied by the similarity score of self.
+
+        >>> v1 = _WeightedVertex('c1', [0.1], [0.1], 10000)
+        >>> v2 = _WeightedVertex('c2', [0.1], [0.1], 10000)
+        >>> v1.restrictions_level['face-covering-policies'] = 3
+        >>> v2.restrictions_level['face-covering-policies'] = 3
+        >>> v1.similar_policies[v2] = 1 / 7
+        >>> v2.similar_policies[v1] = 1 / 7
+        >>> v1.get_neighbour_averages_cases('face-covering-policies', 3, set())
+        [0.014285714285714285]
+        """
+        visited.add(self)
+
+        average_so_far = []
+        for neighbour in self.similar_policies:
+            if neighbour not in visited:
+                if neighbour.restrictions_level[policy] == level:
+                    average = float(statistics.mean(neighbour.new_cases))
+                    final = average * self.similar_policies[neighbour]
+                    average_so_far.append(final)
+                    average_so_far.extend(neighbour.get_neighbour_averages_cases(policy,
+                                                                                 level, visited))
+
+        return average_so_far
+
+    def get_neighbour_averages_deaths(self, policy: str, level: int, visited: set[_WeightedVertex])\
+            -> list[float]:
+        """Return the averages of daily new cases of the neighbours of the vertex by traversing
+        through the neighbour of the neighbour. The average daily new cases is calculated by taking
+        an average of all the new cases of the vertex multiplied by the similarity score of self.
+
+        >>> v1 = _WeightedVertex('c1', [0.1], [0.2], 10000)
+        >>> v2 = _WeightedVertex('c2', [0.1], [0.2], 10000)
+        >>> v1.restrictions_level['face-covering-policies'] = 3
+        >>> v2.restrictions_level['face-covering-policies'] = 3
+        >>> v1.similar_policies[v2] = 1 / 7
+        >>> v2.similar_policies[v1] = 1 / 7
+        >>> v1.get_neighbour_averages_deaths('face-covering-policies', 3, set())
+        [0.02857142857142857]
+        """
+        visited.add(self)
+
+        average_so_far = []
+        for neighbour in self.similar_policies:
+            if neighbour not in visited:
+                if neighbour.restrictions_level[policy] == level:
+                    average = float(statistics.mean(neighbour.new_deaths))
+                    final = average * self.similar_policies[neighbour]
+                    average_so_far.append(final)
+                    average_so_far.extend(neighbour.get_neighbour_averages_cases(policy,
+                                                                                 level, visited))
+
+        return average_so_far
 
 
 class WeightedGraph:
@@ -307,9 +364,10 @@ if __name__ == '__main__':
 
     import doctest
     doctest.testmod(verbose=True)
-    #
-    # import python_ta
-    # python_ta.check_all(config={
-    #     'max-line-length': 100,
-    #     'disable': ['E1136']
-    # })
+
+    import python_ta
+    python_ta.check_all(config={
+        'max-line-length': 100,
+        'disable': ['E1136'],
+        'extra-imports': ['statistics']
+    })
