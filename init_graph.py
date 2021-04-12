@@ -35,9 +35,6 @@ def convert_data_type(data: str) -> Union[str, float]:
     """Convert a str data to either a float data, or keep it
     as a str data if the data is an empty string.
 
-    Preconditions:
-        - data.isalnum()
-
     >>> convert_data_type('123')
     123.0
     """
@@ -62,7 +59,7 @@ def get_main_data(filename: str, data: str) -> dict[str, list[Union[str, float]]
     >>> s = get_main_data('datasets/main_data.csv', 'new_deaths')
     >>> sample = s['Afghanistan']
     >>> len(sample)
-    384
+    357
     """
     with open(filename) as data_file:
         reader = csv.reader(data_file)
@@ -73,16 +70,20 @@ def get_main_data(filename: str, data: str) -> dict[str, list[Union[str, float]]
 
         if data == 'new_cases':
             for row in reader:
-                if row[1] not in return_dict:
+                if row[1] not in return_dict and row[3] != '':
                     return_dict[row[1]] = [convert_data_type(row[3])]
-                else:
+                elif row[1] in return_dict and row[3] != '':
                     return_dict[row[1]].append(convert_data_type(row[3]))
+                else:
+                    pass
         else:
             for row in reader:
-                if row[1] not in return_dict:
+                if row[1] not in return_dict and row[4] != '':
                     return_dict[row[1]] = [convert_data_type(row[4])]
-                else:
+                elif row[1] in return_dict and row[4] != '':
                     return_dict[row[1]].append(convert_data_type(row[4]))
+                else:
+                    pass
 
         return return_dict
 
@@ -207,8 +208,8 @@ class CountryNotFound(CountryNotInGraphError):
 
 
 if __name__ == '__main__':
-    # import python_ta.contracts
-    # python_ta.contracts.check_all_contracts()
+    import python_ta.contracts
+    python_ta.contracts.check_all_contracts()
 
     import doctest
     doctest.testmod(verbose=True)
