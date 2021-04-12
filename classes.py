@@ -157,7 +157,8 @@ class _WeightedVertex:
             -> list[float]:
         """Return the averages of daily new cases of the neighbours of the vertex by traversing
         through the neighbour of the neighbour. The average daily new cases is calculated by taking
-        an average of all the new cases of the vertex multiplied by the similarity score of self.
+        an average of all the new cases divided by the population of the vertex,
+        then multiplied by the similarity score of self.
 
         >>> v1 = _WeightedVertex('c1', [0.1], [0.1], 10000)
         >>> v2 = _WeightedVertex('c2', [0.1], [0.1], 10000)
@@ -166,7 +167,7 @@ class _WeightedVertex:
         >>> v1.similar_policies[v2] = 1 / 7
         >>> v2.similar_policies[v1] = 1 / 7
         >>> v1.get_neighbour_averages_cases('face-covering-policies', 3, set())
-        [0.014285714285714285]
+        [1.4285714285714286e-06]
         """
         visited.add(self)
 
@@ -174,7 +175,7 @@ class _WeightedVertex:
         for neighbour in self.similar_policies:
             if neighbour not in visited:
                 if neighbour.restrictions_level[policy] == level:
-                    average = float(statistics.mean(neighbour.new_cases))
+                    average = float(statistics.mean(neighbour.new_cases) / neighbour.population)
                     final = average * self.similar_policies[neighbour]
                     average_so_far.append(final)
                     average_so_far.extend(neighbour.get_neighbour_averages_cases(policy,
@@ -184,9 +185,10 @@ class _WeightedVertex:
 
     def get_neighbour_averages_deaths(self, policy: str, level: int, visited: set[_WeightedVertex])\
             -> list[float]:
-        """Return the averages of daily new cases of the neighbours of the vertex by traversing
-        through the neighbour of the neighbour. The average daily new cases is calculated by taking
-        an average of all the new cases of the vertex multiplied by the similarity score of self.
+        """Return the averages of daily new deaths of the neighbours of the vertex by traversing
+        through the neighbour of the neighbour. The average daily new deaths is calculated by taking
+        an average of all the new cases divided by the population of the vertex,
+        then multiplied by the similarity score of self.
 
         >>> v1 = _WeightedVertex('c1', [0.1], [0.2], 10000)
         >>> v2 = _WeightedVertex('c2', [0.1], [0.2], 10000)
@@ -195,7 +197,7 @@ class _WeightedVertex:
         >>> v1.similar_policies[v2] = 1 / 7
         >>> v2.similar_policies[v1] = 1 / 7
         >>> v1.get_neighbour_averages_deaths('face-covering-policies', 3, set())
-        [0.02857142857142857]
+        [2.8571428571428573e-06]
         """
         visited.add(self)
 
@@ -203,7 +205,7 @@ class _WeightedVertex:
         for neighbour in self.similar_policies:
             if neighbour not in visited:
                 if neighbour.restrictions_level[policy] == level:
-                    average = float(statistics.mean(neighbour.new_deaths))
+                    average = float(statistics.mean(neighbour.new_deaths) / neighbour.population)
                     final = average * self.similar_policies[neighbour]
                     average_so_far.append(final)
                     average_so_far.extend(neighbour.get_neighbour_averages_cases(policy,

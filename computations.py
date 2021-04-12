@@ -55,7 +55,7 @@ def get_new_cases_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVer
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
     >>> average = get_new_cases_growth_rate(g, None, 'face-covering-policies', 2, set())
-    >>> average == statistics.mean([0.1 * 1/7, 0.1])
+    >>> average == statistics.mean([0.1/10000 * 1/7, 0.1/10000])
     True
     """
     if start is None:
@@ -68,7 +68,7 @@ def get_new_cases_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVer
         return get_new_cases_special(graph, policy, level)
 
     lst = start.get_neighbour_averages_cases(policy, level, set())
-    lst.append(get_average(start.new_cases))
+    lst.append(get_average(start.new_cases) / start.population)
 
     return get_average(lst)
 
@@ -95,7 +95,7 @@ def get_new_cases_special(graph: WeightedGraph, policy: str, level: int) -> floa
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
     >>> average = get_new_cases_special(g, 'face-covering-policies', 0)
-    >>> average == statistics.mean([0.1 * 1/7, 0.1])
+    >>> average == statistics.mean([0.1/10000 * 1/7, 0.1/10000])
     True
     """
     vertices = graph.get_all_vertices()
@@ -186,7 +186,7 @@ def get_new_deaths_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVe
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
     >>> average = get_new_deaths_growth_rate(g, None, 'face-covering-policies', 2, set())
-    >>> average == statistics.mean([0.2 * 1/7, 0.2])
+    >>> average == statistics.mean([0.2/10000 * 1/7, 0.2/10000])
     True
     """
     if start is None:
@@ -199,7 +199,7 @@ def get_new_deaths_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVe
         return get_new_deaths_special(graph, policy, level)
 
     lst = start.get_neighbour_averages_deaths(policy, level, set())
-    lst.append(get_average(start.new_deaths))
+    lst.append(get_average(start.new_deaths) / start.population)
 
     return get_average(lst)
 
@@ -226,7 +226,7 @@ def get_new_deaths_special(graph: WeightedGraph, policy: str, level: int) -> flo
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
     >>> average = get_new_deaths_special(g, 'face-covering-policies', 0)
-    >>> average == statistics.mean([0.2 * 1/7, 0.2])
+    >>> average == statistics.mean([0.2/10000 * 1/7, 0.2/10000])
     True
     """
     vertices = graph.get_all_vertices()
@@ -336,7 +336,7 @@ def get_total_average_case_growth(graph: WeightedGraph, policies: dict[str, int]
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
     >>> average = get_total_average_case_growth(g, {'face-covering-policies': 2})
-    >>> average == statistics.mean([0.1 * 1/7, 0.1])
+    >>> average == statistics.mean([0.1/10000 * 1/7, 0.1/10000])
     True
     """
     growths = []
@@ -364,7 +364,7 @@ def get_total_average_deaths_growth(graph: WeightedGraph, policies: dict[str, in
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
     >>> average = get_total_average_deaths_growth(g, {'face-covering-policies': 0})
-    >>> average == statistics.mean([0.2 * 1/7, 0.2])
+    >>> average == statistics.mean([0.2/10000 * 1/7, 0.2/10000])
     True
     """
     growths = []
