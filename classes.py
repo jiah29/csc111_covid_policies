@@ -111,8 +111,8 @@ class _WeightedVertex:
         other's country
 
         Preconditions:
-            - any(policy in other.restrictions_level for policy in self.restrictions_level)
-            - any(policy in self.restrictions_level for policy in other.restrictions_level)
+            - all(policy in other.restrictions_level for policy in self.restrictions_level)
+            - all(policy in self.restrictions_level for policy in other.restrictions_level)
 
         >>> c1 = _WeightedVertex('Country1', [0.1], [0.1], 100000)
         >>> c1.restrictions_level['Policy'] = 2
@@ -126,6 +126,33 @@ class _WeightedVertex:
                 return True
 
         return False
+
+    def same_policy_level(self, policy: str) -> list[str]:
+        """Return a list of country name that has the same level of policy. The return set
+        does not contain self.
+
+        Preconditions:
+            - policy in ['face-covering-policies', 'public-campaigns-covid',
+            'public-events-cancellation','school-workplace-closures', 'stay-at-home',
+            'testing-policy', 'vaccination-policy']
+            - 0 <= level <= 6
+
+        >>> v1 = _WeightedVertex('c1', [0.1], [0.1], 10000)
+        >>> v1.restrictions_level['face-covering-policies'] = 3
+        >>> v2 = _WeightedVertex('c2', [0.1], [0.1], 10000)
+        >>> v2.restrictions_level['face-covering-policies'] = 3
+        >>> v1.similar_policies[v2] = 1/7
+        >>> v2.similar_policies[v1] = 1/7
+        >>> v1.same_policy_level('face-covering-policies')
+        ['c2']
+        """
+        returned = list()
+
+        for neighbour in self.similar_policies:
+            if neighbour.restrictions_level[policy] == self.restrictions_level[policy]:
+                returned.append(neighbour.country_name)
+
+        return returned
 
 
 class WeightedGraph:
@@ -200,15 +227,15 @@ class WeightedGraph:
         The main chunk of this function is done in the add_edge helper function. Refer
         to the specification of that function for more details.
 
-        >>> s = WeightedGraph()
-        >>> s.add_vertex('Country1', [0.1], [0.1], 100000)
-        >>> s.add_vertex('Country2', [0.1], [0.1], 100000)
-        >>> s.add_vertex_restrictions('Country1', 'face_covering', 3)
-        >>> s.add_vertex_restrictions('Country2', 'face_covering', 3)
-        >>> s.find_and_add_edge('Country1')
-        >>> s._vertices['Country2'] in s._vertices['Country1'].similar_policies
+        >>> g = WeightedGraph()
+        >>> g.add_vertex('Country1', [0.1], [0.1], 100000)
+        >>> g.add_vertex('Country2', [0.1], [0.1], 100000)
+        >>> g.add_vertex_restrictions('Country1', 'face-covering-policies', 3)
+        >>> g.add_vertex_restrictions('Country2', 'face-covering-policies', 3)
+        >>> g.find_and_add_edge('Country1')
+        >>> g._vertices['Country2'] in g._vertices['Country1'].similar_policies
         True
-        >>> s._vertices['Country1'].similar_policies[s._vertices['Country2']] == 1/7
+        >>> g._vertices['Country1'].similar_policies[g._vertices['Country2']] == 1/7
         True
         """
         if country in self._vertices:
@@ -240,13 +267,12 @@ class WeightedGraph:
         v1 = self._vertices[country1]
         v2 = self._vertices[country2]
 
-        if v2 in v1.similar_policies:
-            return
-        else:
-            connection = v1.has_same_policy(v2)
+        connection = v1.has_same_policy(v2)
 
-            if connection:
-                v1.similar_policies[v2] = v1.calculate_weight(v2)
+        if connection:
+            weight = v1.calculate_weight(v2)
+            v1.similar_policies[v2] = weight
+            v2.similar_policies[v1] = weight
 
     def get_all_vertices(self) -> dict[str, _WeightedVertex]:
         """Return a dictionary mapping of all vertices in the graph"""
@@ -281,9 +307,9 @@ if __name__ == '__main__':
 
     import doctest
     doctest.testmod(verbose=True)
-
-    import python_ta
-    python_ta.check_all(config={
-        'max-line-length': 100,
-        'disable': ['E1136']
-    })
+    #
+    # import python_ta
+    # python_ta.check_all(config={
+    #     'max-line-length': 100,
+    #     'disable': ['E1136']
+    # })
