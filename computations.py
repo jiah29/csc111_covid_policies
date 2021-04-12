@@ -27,10 +27,10 @@ from classes import _WeightedVertex, WeightedGraph
 
 def get_new_cases_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVertex],
                               policy: str, level: int, visited: set[_WeightedVertex]) -> float:
-    """Return the average daily new cases rate for the specific level of the policy.
-
-    tuple[0]: starting vertex name
-    tuple[1]: the average
+    """Return the average daily new cases rate for the specific level of the policy. The returned
+    float gives the average of number of new cases every day in terms of the percentage of a
+    given population. For example, if the returned float is 0.01, then the average daily new cases
+    is 0.01 of a country's population.
 
     This is calculated by traversing through the graph starting from the start vertex without
     visiting any vertex in visited and collecting the average number of new cases for countries
@@ -40,7 +40,7 @@ def get_new_cases_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVer
 
     If there is no country with the specific policy level, calculate the average for
     the level of policy that is one above and one below (if available), then get the average of
-    the two.
+    the two. Refer to _get_new_cases_special().
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
@@ -65,7 +65,7 @@ def get_new_cases_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVer
                 start = graph.get_all_vertices()[country]
 
     if start is None:
-        return get_new_cases_special(graph, policy, level)
+        return _get_new_cases_special(graph, policy, level)
 
     lst = start.get_neighbour_averages_cases(policy, level, set())
     lst.append(get_average(start.new_cases) / start.population)
@@ -73,7 +73,7 @@ def get_new_cases_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVer
     return get_average(lst)
 
 
-def get_new_cases_special(graph: WeightedGraph, policy: str, level: int) -> float:
+def _get_new_cases_special(graph: WeightedGraph, policy: str, level: int) -> float:
     """Calculate the average new cases for the specific policy level if there is no country
     that meets the criteria. This function will calculate the average new cases for the policy
     by calculating the averages for the policy level that is one higher and one lower, then take
@@ -94,7 +94,7 @@ def get_new_cases_special(graph: WeightedGraph, policy: str, level: int) -> floa
     >>> g.add_vertex_restrictions('c1', 'face-covering-policies', 2)
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
-    >>> average = get_new_cases_special(g, 'face-covering-policies', 0)
+    >>> average = _get_new_cases_special(g, 'face-covering-policies', 0)
     >>> average == statistics.mean([0.1/10000 * 1/7, 0.1/10000])
     True
     """
@@ -139,6 +139,10 @@ def get_final_case_average(graph: WeightedGraph, policy: str, level: int) -> flo
     the weight of the edges as the graph is traversed. To mitigate this, we will do
     between 5 - 10 traversals and get the average from it.
 
+    The returned float gives the average of number of new cases every day in terms of the
+    percentage of a given population. For example, if the returned float is 0.01, then the average
+    daily new case is 0.01 of a country's population.
+
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
             'public-events-cancellation','school-workplace-closures', 'stay-at-home',
@@ -158,20 +162,20 @@ def get_final_case_average(graph: WeightedGraph, policy: str, level: int) -> flo
 
 def get_new_deaths_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVertex],
                                policy: str, level: int, visited: set[_WeightedVertex]) -> float:
-    """Return the average daily new deaths rate for the specific level of the policy.
-
-    tuple[0]: starting vertex name
-    tuple[1]: the average
+    """Return the average daily new deaths rate for the specific level of the policy. The returned
+    float gives the average of number of new deaths every day in terms of the percentage of a
+    given population. For example, if the returned float is 0.01, then the average daily new deaths
+    is 0.01 of a country's population.
 
     This is calculated by traversing through the graph starting from the start vertex without
     visiting any vertex in visited and collecting the average number of new cases for countries
     that meet the specific policy level. The specific weight of each edge will also be taken
-    into account (Refer to _WeightedVertex.get_neighbour_average_cases for more details.
+    into account (Refer to _WeightedVertex.get_neighbour_average_deaths for more details.
     If no start vertex is provided, find a vertex randomly that meets the criteria to begin.
 
     If there is no country with the specific policy level, calculate the average for
     the level of policy that is one above and one below (if available), then get the average of
-    the two.
+    the two. Refer to _get_new_deaths_special().
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
@@ -196,7 +200,7 @@ def get_new_deaths_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVe
                 start = graph.get_all_vertices()[country]
 
     if start is None:
-        return get_new_deaths_special(graph, policy, level)
+        return _get_new_deaths_special(graph, policy, level)
 
     lst = start.get_neighbour_averages_deaths(policy, level, set())
     lst.append(get_average(start.new_deaths) / start.population)
@@ -204,7 +208,7 @@ def get_new_deaths_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVe
     return get_average(lst)
 
 
-def get_new_deaths_special(graph: WeightedGraph, policy: str, level: int) -> float:
+def _get_new_deaths_special(graph: WeightedGraph, policy: str, level: int) -> float:
     """Calculate the average new cases for the specific policy level if there is no country
     that meets the criteria. This function will calculate the average new cases for the policy
     by calculating the averages for the policy level that is one higher and one lower, then take
@@ -225,7 +229,7 @@ def get_new_deaths_special(graph: WeightedGraph, policy: str, level: int) -> flo
     >>> g.add_vertex_restrictions('c1', 'face-covering-policies', 2)
     >>> g.add_vertex_restrictions('c2', 'face-covering-policies', 2)
     >>> g.find_and_add_edge('c1')
-    >>> average = get_new_deaths_special(g, 'face-covering-policies', 0)
+    >>> average = _get_new_deaths_special(g, 'face-covering-policies', 0)
     >>> average == statistics.mean([0.2/10000 * 1/7, 0.2/10000])
     True
     """
@@ -269,6 +273,10 @@ def get_final_deaths_average(graph: WeightedGraph, policy: str, level: int) -> f
     as the starting country for traversal is chosen at random from the dict, and this will affect
     the weight of the edges as the graph is traversed. To mitigate this, we will do
     between 5 - 10 traversals and get the average from it.
+
+    The returned float gives the average of number of new deaths every day in terms of the
+    percentage of a given population. For example, if the returned float is 0.01, then the average
+    daily new deaths is 0.01 of a country's population.
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
@@ -321,7 +329,10 @@ def get_upper_limit(policy: str) -> int:
 
 def get_total_average_case_growth(graph: WeightedGraph, policies: dict[str, int]) -> float:
     """Return the total average new cases every day given a range of policies and their
-    respective level in the dict of the form of {policies: level}.
+    respective level in the dict of the form of {policies: level}. The returned
+    float gives the average of number of new cases every day in terms of the percentage of a
+    given population. For example, if the returned float is 0.01, then the average daily new cases
+    is 0.01 of a country's population.
 
     This is calculated by calculating the case average of each policies, then taking the average
     of that.
@@ -349,7 +360,10 @@ def get_total_average_case_growth(graph: WeightedGraph, policies: dict[str, int]
 
 def get_total_average_deaths_growth(graph: WeightedGraph, policies: dict[str, int]) -> float:
     """Return the total average new deaths every day given a range of policies and their
-    respective level in the dict of the form of {policies: level}.
+    respective level in the dict of the form of {policies: level}. The returned
+    float gives the average of number of new deaths every day in terms of the percentage of a
+    given population. For example, if the returned float is 0.01, then the average daily new deaths
+    is 0.01 of a country's population.
 
     This is calculated by calculating the death average of each policies, then taking the average
     of that.
