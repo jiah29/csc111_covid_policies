@@ -80,7 +80,8 @@ def _get_new_cases_special(graph: WeightedGraph, policy: str, level: int) -> flo
     the average of the two.
 
     If the policy level above or below is not available, keep going higher or lower
-    until finding one that is available.
+    until finding one that is available. If there is only one level available and an average cannot
+    be take, the function will retrun the average based on that sole level.
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
@@ -134,11 +135,6 @@ def get_final_case_average(graph: WeightedGraph, policy: str, level: int) -> flo
     """This function make use of get_new_cases_growth_rate between 5 to 10 times (chosen randomly)
     to get a final average of the number of new cases based on the given policy level.
 
-    This is done because there is an element of randomness for get_new_cases_growth_rate,
-    as the starting country for traversal is chosen at random from the dict, and this will affect
-    the weight of the edges as the graph is traversed. To mitigate this, we will do
-    between 5 - 10 traversals and get the average from it.
-
     The returned float gives the average of number of new cases every day in terms of the
     percentage of a given population. For example, if the returned float is 0.01, then the average
     daily new case is 0.01 of a country's population.
@@ -150,11 +146,17 @@ def get_final_case_average(graph: WeightedGraph, policy: str, level: int) -> flo
         - 0 <= level <= 6
     """
     num_times = random.randint(5, 10)
+    choices = [graph.get_all_vertices()[country] for country in graph.get_all_vertices() if
+               graph.get_all_vertices()[country].restrictions_level[policy] == level]
 
     averages = list()
 
     for _ in range(num_times):
-        returned = get_new_cases_growth_rate(graph, None, policy, level, set())
+        if choices != []:
+            start = random.choice(choices)
+        else:
+            start = None
+        returned = get_new_cases_growth_rate(graph, start, policy, level, set())
         averages.append(returned)
 
     return get_average(averages)
@@ -166,12 +168,6 @@ def get_new_deaths_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVe
     float gives the average of number of new deaths every day in terms of the percentage of a
     given population. For example, if the returned float is 0.01, then the average daily new deaths
     is 0.01 of a country's population.
-
-    This is calculated by traversing through the graph starting from the start vertex without
-    visiting any vertex in visited and collecting the average number of new cases for countries
-    that meet the specific policy level. The specific weight of each edge will also be taken
-    into account (Refer to _WeightedVertex.get_neighbour_average_deaths for more details.
-    If no start vertex is provided, find a vertex randomly that meets the criteria to begin.
 
     If there is no country with the specific policy level, calculate the average for
     the level of policy that is one above and one below (if available), then get the average of
@@ -215,7 +211,8 @@ def _get_new_deaths_special(graph: WeightedGraph, policy: str, level: int) -> fl
     the average of the two.
 
     If the policy level above or below is not available, keep going higher or lower
-    until finding one that is available.
+    until finding one that is available. If there is only one level available and an average cannot
+    be take, the function will retrun the average based on that sole level.
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
@@ -285,11 +282,17 @@ def get_final_deaths_average(graph: WeightedGraph, policy: str, level: int) -> f
         - 0 <= level <= 6
     """
     num_times = random.randint(5, 10)
+    choices = [graph.get_all_vertices()[country] for country in graph.get_all_vertices() if
+               graph.get_all_vertices()[country].restrictions_level[policy] == level]
 
     averages = list()
 
     for _ in range(num_times):
-        returned = get_new_deaths_growth_rate(graph, None, policy, level, set())
+        if choices != []:
+            start = random.choice(choices)
+        else:
+            start = None
+        returned = get_new_deaths_growth_rate(graph, start, policy, level, set())
         averages.append(returned)
 
     return get_average(averages)
