@@ -190,10 +190,42 @@ def get_real_graph() -> WeightedGraph:
     return graph
 
 
-def get_modified_graph() -> WeightedGraph:
-    """Initialise a WeightedGraph based on a modified, smaller datasets.
+def get_test_graph() -> WeightedGraph:
+    """Initialise a WeightedGraph based on a modified, smaller test datasets.
     Run this function instead of get_real_graph for quicker run time."""
-    # TODO
+    countries_cases = get_main_data('datasets/test_data.csv', 'new_cases')
+    countries_deaths = get_main_data('datasets/test_data.csv', 'new_deaths')
+    graph = WeightedGraph()
+
+    for country in countries_cases:
+        population = get_population('datasets/test_data.csv', country)
+        graph.add_vertex(country, countries_cases[country], countries_deaths[country], population)
+
+        graph.add_vertex_restrictions(country, 'face-covering-policies',
+                                      get_policy_restrictions('test-face-covering-policies',
+                                                              country))
+        graph.add_vertex_restrictions(country, 'public-campaigns-covid',
+                                      get_policy_restrictions('test-public-campaigns-covid',
+                                                              country))
+        graph.add_vertex_restrictions(country, 'public-events-cancellation',
+                                      get_policy_restrictions('test-public-events-cancellation',
+                                                              country))
+        graph.add_vertex_restrictions(country, 'school-workplace-closures',
+                                      get_policy_restrictions('test-school-workplace-closures',
+                                                              country))
+        graph.add_vertex_restrictions(country, 'stay-at-home',
+                                      get_policy_restrictions('test-stay-at-home', country))
+        graph.add_vertex_restrictions(country, 'testing-policy',
+                                      get_policy_restrictions('test-testing-policy', country))
+        graph.add_vertex_restrictions(country, 'vaccination-policy',
+                                      get_policy_restrictions('test-vaccination-policy', country))
+
+    all_vertices = graph.get_all_vertices()
+
+    for country in all_vertices:
+        graph.find_and_add_edge(country)
+
+    return graph
 
 
 class CountryNotFound(CountryNotInGraphError):

@@ -19,7 +19,7 @@ are expressly prohibited.
 
 This file is Copyright (c) 2021 Jia Hao Choo & Komal Saini.
 """
-from init_graph import get_real_graph
+from init_graph import get_real_graph, get_test_graph
 from plot_networks import visualise
 from computations import get_total_average_case_growth, get_total_average_deaths_growth
 
@@ -30,14 +30,27 @@ if __name__ == '__main__':
     #  ['face-covering-policies', 'public-campaigns-covid', 'public-events-cancellation',
     #  'school-workplace-closures', 'stay-at-home', 'testing-policy', 'vaccination-policy']
 
-    real_graph = get_real_graph()
-
-    visualise('public-events-cancellation', real_graph)
-    visualise('face-covering-policies', real_graph)
-    visualise('public-campaigns-covid', real_graph)
-    visualise('school-workplace-closures', real_graph)
-    visualise('stay-at-home', real_graph)
-    visualise('testing-policy', real_graph)
-    visualise('vaccination-policy', real_graph)
+    # Real graph - note that this will take some time to load; for quicker load time,
+    # run test graph instead
+    # real_graph = get_real_graph()
+    #
+    # visualise('public-events-cancellation', real_graph)
+    # visualise('face-covering-policies', real_graph)
+    # visualise('public-campaigns-covid', real_graph)
+    # visualise('school-workplace-closures', real_graph)
+    # visualise('stay-at-home', real_graph)
+    # visualise('testing-policy', real_graph)
+    # visualise('vaccination-policy', real_graph)
 
     # get_total_average_case_growth(real_graph, {'face-covering-policies': 2})
+
+    # Test graph - run this part for short run time
+    test_graph = get_test_graph()
+
+    visualise('public-events-cancellation', test_graph)
+    visualise('face-covering-policies', test_graph)
+    visualise('public-campaigns-covid', test_graph)
+    visualise('school-workplace-closures', test_graph)
+    visualise('stay-at-home', test_graph)
+    visualise('testing-policy', test_graph)
+    visualise('vaccination-policy', test_graph)

@@ -57,12 +57,15 @@ def convert_policy_to_networkx(graph: WeightedGraph, policy: str, level: int) ->
         return graph_nx
 
     others = start.same_policy_level(policy)
-    others.insert(0, start.country_name)
+    if others == []:
+        graph_nx.add_node(start.country_name)
+    else:
+        others.insert(0, start.country_name)
 
-    for i in range(len(others) - 1):
-        graph_nx.add_node(others[i])
-        graph_nx.add_node(others[i + 1])
-        graph_nx.add_edge(others[i], others[i + 1])
+        for i in range(len(others) - 1):
+            graph_nx.add_node(others[i])
+            graph_nx.add_node(others[i + 1])
+            graph_nx.add_edge(others[i], others[i + 1])
 
     return graph_nx
 
