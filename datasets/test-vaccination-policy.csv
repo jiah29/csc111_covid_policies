@@ -1,0 +1,15 @@
+Entity,Code,Date,vaccination_policy
+Afghanistan,AFG,2020-02-24,1
+Afghanistan,AFG,2020-02-25,1
+Canada,CAN,2020-02-24,2
+Canada,CAN,2020-02-25,2
+United States,USA,2020-02-24,2
+United States,USA,2020-02-25,2
+United Kingdom,GBR,2020-02-24,1
+United Kingdom,GBR,2020-02-25,1
+Norway,NOR,2020-02-24,2
+Norway,NOR,2020-02-25,2
+South Africa,ZAF,2020-02-24,1
+South Africa,ZAF,2020-02-25,1
+Australia,AUS,2020-02-24,1
+Australia,AUS,2020-02-25,1
