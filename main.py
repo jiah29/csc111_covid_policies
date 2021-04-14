@@ -19,38 +19,63 @@ are expressly prohibited.
 
 This file is Copyright (c) 2021 Jia Hao Choo & Komal Saini.
 """
-from init_graph import get_real_graph, get_test_graph
+import pickle
+
+from init_graph import get_test_graph
 from plot_networks import visualise
-from computations import get_total_average_case_growth, get_total_average_deaths_growth
 
 
 if __name__ == '__main__':
 
-    #  lists of policy =
-    #  ['face-covering-policies', 'public-campaigns-covid', 'public-events-cancellation',
-    #  'school-workplace-closures', 'stay-at-home', 'testing-policy', 'vaccination-policy']
+    ################################################################################
+    # Valid policies & levels for the program
+    ################################################################################
+    #  'face-covering-policies', 'public-campaigns-covid', 'public-events-cancellation',
+    #  'school-workplace-closures', 'stay-at-home', 'testing-policy', 'vaccination-policy'
 
-    # Real graph - note that this will take some time to load; for quicker load time,
-    # run test graph instead
-    # real_graph = get_real_graph()
-    #
-    # visualise('public-events-cancellation', real_graph)
-    # visualise('face-covering-policies', real_graph)
-    # visualise('public-campaigns-covid', real_graph)
-    # visualise('school-workplace-closures', real_graph)
-    # visualise('stay-at-home', real_graph)
-    # visualise('testing-policy', real_graph)
-    # visualise('vaccination-policy', real_graph)
+    ################################################################################
+    # Real datasets
+    ################################################################################
 
-    # get_total_average_case_growth(real_graph, {'face-covering-policies': 2})
+    infile = open('datasets/saved_graph', 'rb')
 
-    # Test graph - run this part for short run time
-    test_graph = get_test_graph()
+    real_graph = pickle.load(infile)
 
-    visualise('public-events-cancellation', test_graph)
-    visualise('face-covering-policies', test_graph)
-    visualise('public-campaigns-covid', test_graph)
-    visualise('school-workplace-closures', test_graph)
-    visualise('stay-at-home', test_graph)
-    visualise('testing-policy', test_graph)
-    visualise('vaccination-policy', test_graph)
+    # Visualise networks - feel free to uncomment any of the function call below if you
+    # do not wish to view the network graph for certain policy.
+    visualise('public-events-cancellation', real_graph)
+    visualise('face-covering-policies', real_graph)
+    visualise('public-campaigns-covid', real_graph)
+    visualise('school-workplace-closures', real_graph)
+    visualise('stay-at-home', real_graph)
+    visualise('testing-policy', real_graph)
+    visualise('vaccination-policy', real_graph)
+
+    # Visualise simulation graph - feel free to change the function argument below
+    # 1) You can take out certain policies from the dict
+    # 2) You can change certain policy level in the dict
+    # (refer to "Valid policies & levels for the program" for a list of valid policies and levels)
+    # TODO
+
+    ################################################################################
+    # Test datasets
+    ################################################################################
+
+    # Test graph - run this part for shorter run time to generate the complete graph
+    # test_graph = get_test_graph()
+
+    # Visualise networks - feel free to uncomment any of the function call below if you
+    # do not wish to view the network graph for certain policy.
+    # visualise('public-events-cancellation', test_graph)
+    # visualise('face-covering-policies', test_graph)
+    # visualise('public-campaigns-covid', test_graph)
+    # visualise('school-workplace-closures', test_graph)
+    # visualise('stay-at-home', test_graph)
+    # visualise('testing-policy', test_graph)
+    # visualise('vaccination-policy', test_graph)
+
+    # Visualise simulation graph - feel free to change the function argument below
+    # 1) You can take out certain policies from the dict
+    # 2) You can change certain policy level in the dict
+    # (refer to "Valid policies & levels for the program" for a list of valid policies and levels)
+    # TODO
