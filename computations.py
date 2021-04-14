@@ -330,6 +330,70 @@ def get_upper_limit(policy: str) -> int:
     return upper_limit
 
 
+def exact_policies(graph: WeightedGraph, policies: dict[str, int]) -> list[str]:
+    """Return a list of countries with the exact same policies specified in the policies
+    dict in the form of {policy: level}.
+
+    >>> import init_graph
+    >>> g = init_graph.get_test_graph()
+    >>> exact_policies(g, {'testing-policy': 0, 'vaccination-policy': 1, 'stay-at-home': 0})
+    ['Afghanistan']
+    """
+    vertices = graph.get_all_vertices()
+
+    returned = []
+
+    for country in vertices:
+        possible = []
+        for policy in policies:
+            if vertices[country].restrictions_level[policy] == policies[policy]:
+                possible.append(country)
+        if len(possible) == len(policies):
+            returned.append(possible[0])
+
+    return returned
+
+
+def get_exact_case_average(graph: WeightedGraph, lst: list[str]) -> float:
+    """Return the exact average daily case count from the list of countries.
+
+    >>> import init_graph
+    >>> g = init_graph.get_test_graph()
+    >>> average = get_exact_case_average(g, ['Afghanistan', 'Canada'])
+    >>> a1 = ((25.0 + 26.0 + 30.0 + 35.0 + 41.0) / 5) / 38928341.0
+    >>> a2 = ((26.0 + 27.0 + 30.0 + 45.0 + 57.0) / 5) / 37742157.0
+    >>> get_average([a1, a2]) == average
+    True
+    """
+    averages = []
+    vertices = graph.get_all_vertices()
+
+    for country in lst:
+        averages.append(get_average(vertices[country].new_cases) / vertices[country].population)
+
+    return get_average(averages)
+
+
+def get_exact_deaths_average(graph: WeightedGraph, lst: list[str]) -> float:
+    """Return the exact average daily case count from the list of countries.
+
+    >>> import init_graph
+    >>> g = init_graph.get_test_graph()
+    >>> average = get_exact_deaths_average(g, ['Afghanistan', 'Canada'])
+    >>> a1 = ((0.0 + 0.0 + 4.0 + 5.0 + 10.0) / 5) / 38928341.0
+    >>> a2 = ((0.0 + 1.0 + 10.0 + 12.0 + 14.0) / 5) / 37742157.0
+    >>> get_average([a1, a2]) == average
+    True
+    """
+    averages = []
+    vertices = graph.get_all_vertices()
+
+    for country in lst:
+        averages.append(get_average(vertices[country].new_deaths) / vertices[country].population)
+
+    return get_average(averages)
+
+
 def get_total_average_case_growth(graph: WeightedGraph, policies: dict[str, int]) -> float:
     """Return the total average new cases every day given a range of policies and their
     respective level in the dict of the form of {policies: level}. The returned
@@ -396,70 +460,6 @@ def get_total_average_deaths_growth(graph: WeightedGraph, policies: dict[str, in
             growths.append(get_final_deaths_average(graph, policy, policies[policy]))
 
         return get_average(growths)
-
-
-def exact_policies(graph: WeightedGraph, policies: dict[str, int]) -> list[str]:
-    """Return a list of countries with the exact same policies specified in the policies
-    dict in the form of {policy: level}.
-
-    >>> import init_graph
-    >>> g = init_graph.get_test_graph()
-    >>> exact_policies(g, {'testing-policy': 0, 'vaccination-policy': 1, 'stay-at-home': 0})
-    ['Afghanistan']
-    """
-    vertices = graph.get_all_vertices()
-
-    returned = []
-
-    for country in vertices:
-        possible = []
-        for policy in policies:
-            if vertices[country].restrictions_level[policy] == policies[policy]:
-                possible.append(country)
-        if len(possible) == len(policies):
-            returned.append(possible[0])
-
-    return returned
-
-
-def get_exact_case_average(graph: WeightedGraph, lst: list[str]) -> float:
-    """Return the exact average daily case count from the list of countries.
-
-    >>> import init_graph
-    >>> g = init_graph.get_test_graph()
-    >>> average = get_exact_case_average(g, ['Afghanistan', 'Canada'])
-    >>> a1 = ((25.0 + 26.0 + 30.0 + 35.0 + 41.0) / 5) / 38928341.0
-    >>> a2 = ((26.0 + 27.0 + 30.0 + 45.0 + 57.0) / 5) / 37742157.0
-    >>> get_average([a1, a2]) == average
-    True
-    """
-    averages = []
-    vertices = graph.get_all_vertices()
-
-    for country in lst:
-        averages.append(get_average(vertices[country].new_cases) / vertices[country].population)
-
-    return get_average(averages)
-
-
-def get_exact_deaths_average(graph: WeightedGraph, lst: list[str]) -> float:
-    """Return the exact average daily case count from the list of countries.
-
-    >>> import init_graph
-    >>> g = init_graph.get_test_graph()
-    >>> average = get_exact_deaths_average(g, ['Afghanistan', 'Canada'])
-    >>> a1 = ((0.0 + 0.0 + 4.0 + 5.0 + 10.0) / 5) / 38928341.0
-    >>> a2 = ((0.0 + 1.0 + 10.0 + 12.0 + 14.0) / 5) / 37742157.0
-    >>> get_average([a1, a2]) == average
-    True
-    """
-    averages = []
-    vertices = graph.get_all_vertices()
-
-    for country in lst:
-        averages.append(get_average(vertices[country].new_deaths) / vertices[country].population)
-
-    return get_average(averages)
 
 
 if __name__ == '__main__':
