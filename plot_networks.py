@@ -117,7 +117,7 @@ def plot_face_masks(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='red'),
+                line=dict(width=1, color='black'),
                 opacity=0.2,
             )
         )
@@ -183,7 +183,7 @@ def plot_face_masks(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='green'),
+                line=dict(width=1, color='red'),
                 opacity=0.2,
             )
         )
@@ -249,7 +249,7 @@ def plot_face_masks(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='black'),
+                line=dict(width=1, color='orange'),
                 opacity=0.2,
             )
         )
@@ -332,7 +332,7 @@ def plot_three_levels(graphs: list[nx.Graph], policy: str, messages: dict[int, s
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='red'),
+                line=dict(width=1, color='black'),
                 opacity=0.2,
             )
         )
@@ -398,7 +398,7 @@ def plot_three_levels(graphs: list[nx.Graph], policy: str, messages: dict[int, s
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='green'),
+                line=dict(width=1, color='red'),
                 opacity=0.2,
             )
         )
@@ -479,7 +479,7 @@ def plot_four_levels(graphs: list[nx.Graph], policy: str, messages: dict[int, st
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='red'),
+                line=dict(width=1, color='black'),
                 opacity=0.2,
             )
         )
@@ -545,7 +545,7 @@ def plot_four_levels(graphs: list[nx.Graph], policy: str, messages: dict[int, st
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='green'),
+                line=dict(width=1, color='red'),
                 opacity=0.2,
             )
         )
@@ -664,7 +664,7 @@ def plot_vaccination(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='red'),
+                line=dict(width=1, color='black'),
                 opacity=0.2,
             )
         )
@@ -730,7 +730,7 @@ def plot_vaccination(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='green'),
+                line=dict(width=1, color='red'),
                 opacity=0.2,
             )
         )
@@ -763,7 +763,7 @@ def plot_vaccination(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='orange'),
+                line=dict(width=1, color='green'),
                 opacity=0.2,
             )
         )
@@ -796,7 +796,7 @@ def plot_vaccination(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
                 lon=[loc1[0], loc2[0]],
                 lat=[loc1[1], loc2[1]],
                 mode='lines',
-                line=dict(width=1, color='black'),
+                line=dict(width=1, color='orange'),
                 opacity=0.2,
             )
         )
