@@ -23,6 +23,7 @@ import pickle
 
 from init_graph import get_test_graph
 from plot_networks import visualise
+from simulations import plot_simulation
 
 
 if __name__ == '__main__':
@@ -30,8 +31,13 @@ if __name__ == '__main__':
     ################################################################################
     # Valid policies & levels for the program
     ################################################################################
-    #  'face-covering-policies', 'public-campaigns-covid', 'public-events-cancellation',
-    #  'school-workplace-closures', 'stay-at-home', 'testing-policy', 'vaccination-policy'
+    #  'face-covering-policies': level 0 - 4,
+    #  'public-campaigns-covid': level 0 - 2,
+    #  'public-events-cancellation': level 0 - 2,
+    #  'school-workplace-closures': level 0 - 3,
+    #  'stay-at-home': level 0 - 3,
+    #  'testing-policy': level 0 - 3,
+    #  'vaccination-policy': level 0 - 5
 
     ################################################################################
     # Real datasets
@@ -55,7 +61,9 @@ if __name__ == '__main__':
     # 1) You can take out certain policies from the dict
     # 2) You can change certain policy level in the dict
     # (refer to "Valid policies & levels for the program" for a list of valid policies and levels)
-    # TODO
+    plot_simulation(real_graph, {'public-events-cancellation': 1, 'face-covering-policies': 1,
+                                 'public-campaigns-covid': 1, 'school-workplace-closures': 1,
+                                 'stay-at-home': 1, 'testing-policy': 1, 'vaccination-policy': 1})
 
     ################################################################################
     # Test datasets
@@ -78,4 +86,6 @@ if __name__ == '__main__':
     # 1) You can take out certain policies from the dict
     # 2) You can change certain policy level in the dict
     # (refer to "Valid policies & levels for the program" for a list of valid policies and levels)
-    # TODO
+    # plot_simulation(test_graph, {'public-events-cancellation': 1, 'face-covering-policies': 1,
+    #                              'public-campaigns-covid': 1, 'school-workplace-closures': 1,
+    #                              'stay-at-home': 1, 'testing-policy': 1, 'vaccination-policy': 1})
