@@ -5,5 +5,7 @@ python-ta~=1.6.3
 networkx
 
 # Plotting
-pandas
 plotly
+
+# Data structure
+pandas
