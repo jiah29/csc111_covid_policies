@@ -5,8 +5,5 @@ python-ta~=1.6.3
 networkx
 
 # Plotting
+pandas
 plotly
-
-# Simulation & user-interface
-pygame
-
