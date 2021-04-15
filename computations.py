@@ -79,9 +79,9 @@ def _get_new_cases_special(graph: WeightedGraph, policy: str, level: int) -> flo
     by calculating the averages for the policy level that is one higher and one lower, then take
     the average of the two.
 
-    If the policy level above or below is not available, keep going higher or lower
+    If the policy level that is one above or below is not available, keep going higher or lower
     until finding one that is available. If there is only one level available and an average cannot
-    be take, the function will retrun the average based on that sole level.
+    be take, the function will return the average based on that sole level.
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
@@ -210,9 +210,9 @@ def _get_new_deaths_special(graph: WeightedGraph, policy: str, level: int) -> fl
     by calculating the averages for the policy level that is one higher and one lower, then take
     the average of the two.
 
-    If the policy level above or below is not available, keep going higher or lower
+    If the policy level that is one above or below is not available, keep going higher or lower
     until finding one that is available. If there is only one level available and an average cannot
-    be take, the function will retrun the average based on that sole level.
+    be take, the function will return the average based on that sole level.
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
