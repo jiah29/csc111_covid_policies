@@ -101,8 +101,8 @@ def cumulative_cases_deaths(category: str, prediction: [str, list], daily_averag
     >>> sample_dict = {'Day': [1, 2], 'Total Cases': [100, 120], 'Total Deaths': [0, 0]}
     >>> cumulative_cases_deaths('cases', sample_dict, 20)
     140
-    >>> sample2 = sample_dict = {'Day': [1, 2], 'Total Cases': [], 'Total Deaths': [0, 0]}
-    >>> cumulative_cases_deaths('cases', sample_dict, 20)
+    >>> sample2 = {'Day': [1, 2], 'Total Cases': [], 'Total Deaths': [0, 0]}
+    >>> cumulative_cases_deaths('cases', sample2, 20)
     20
     """
     if category == 'cases':
