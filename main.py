@@ -58,8 +58,8 @@ if __name__ == '__main__':
     visualise('vaccination-policy', real_graph)
 
     # Visualise simulation graph - feel free to change the function argument below
-    # 1) You can take out certain policies from the dict
-    # 2) You can change certain policy level in the dict
+    # 1) You can take out any policies from the dict
+    # 2) You can change any policy level in the dict
     # (refer to "Valid policies & levels for the program" for a list of valid policies and levels)
     plot_simulation(real_graph, {'public-events-cancellation': 1, 'face-covering-policies': 1,
                                  'public-campaigns-covid': 1, 'school-workplace-closures': 1,
@@ -83,8 +83,8 @@ if __name__ == '__main__':
     # visualise('vaccination-policy', test_graph)
 
     # Visualise simulation graph - feel free to change the function argument below
-    # 1) You can take out certain policies from the dict
-    # 2) You can change certain policy level in the dict
+    # 1) You can take out any policies from the dict
+    # 2) You can change any policy level in the dict
     # (refer to "Valid policies & levels for the program" for a list of valid policies and levels)
     # plot_simulation(test_graph, {'public-events-cancellation': 1, 'face-covering-policies': 1,
     #                              'public-campaigns-covid': 1, 'school-workplace-closures': 1,
