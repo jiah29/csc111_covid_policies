@@ -22,8 +22,8 @@ This file is Copyright (c) 2021 Jia Hao Choo & Komal Saini.
 import pandas as pd
 import plotly.graph_objects as go
 
-from computations import get_total_average_case_growth, get_total_average_deaths_growth
 from classes import WeightedGraph
+from computations import get_total_average_case_growth, get_total_average_deaths_growth
 
 
 def create_predictions(graph: WeightedGraph, policies: dict[str, int]) -> pd.DataFrame:
@@ -213,9 +213,9 @@ def get_annotations(policies: dict[str, int], policy: str) -> str:
 
 
 if __name__ == '__main__':
-    # import python_ta.contracts
-    #
-    # python_ta.contracts.check_all_contracts()
+    import python_ta.contracts
+
+    python_ta.contracts.check_all_contracts()
 
     import doctest
 

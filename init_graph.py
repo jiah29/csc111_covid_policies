@@ -3,7 +3,7 @@
 Instructions (READ THIS FIRST!)
 ===============================
 
-This Python module contains functions that initialise a graph
+This Python module contains functions that initialise a graph object
 based on real world data in the datasets folder. It also contains
 a exception class that inherits from CountryNotInGraphError class from
 classes.py.
@@ -11,8 +11,7 @@ classes.py.
 Do not edit anything in this module.
 
 Comment out python_ta.contracts.check_all_contracts() with
-the function get_real_graph(), else it would take a long time to run since
-the sizes of the datasets are huge.
+the function get_real_graph(), else it would take a long time to run.
 
 Copyright and Usage Information
 ===============================
@@ -24,11 +23,12 @@ are expressly prohibited.
 
 This file is Copyright (c) 2021 Jia Hao Choo & Komal Saini.
 """
-from typing import Union
 import csv
 import math
 import statistics
-from classes import WeightedGraph, CountryNotInGraphError
+from typing import Union
+
+from classes import CountryNotInGraphError, WeightedGraph
 
 
 def convert_data_type(data: str) -> Union[str, float]:
@@ -239,12 +239,15 @@ class CountryNotFound(CountryNotInGraphError):
 
 if __name__ == '__main__':
     import python_ta.contracts
+
     python_ta.contracts.check_all_contracts()
 
     import doctest
+
     doctest.testmod(verbose=True)
 
     import python_ta
+
     python_ta.check_all(config={
         'max-line-length': 100,
         'allowed-io': ['get_main_data', 'get_population', 'get_policy_restrictions'],

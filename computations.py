@@ -4,7 +4,7 @@ Instructions (READ THIS FIRST!)
 ===============================
 
 This Python module contains functions that does the computations
-on the WeightedGraph for simulations and graphs plotting.
+on the WeightedGraph for simulations.
 
 Do not edit anything in this module.
 
@@ -40,7 +40,7 @@ def get_new_cases_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVer
 
     If there is no country with the specific policy level, calculate the average for
     the level of policy that is one above and one below (if available), then get the average of
-    the two. Refer to _get_new_cases_special().
+    the two. Refer to _get_new_cases_special() for this process.
 
     Preconditions:
         - policy in ['face-covering-policies', 'public-campaigns-covid',
@@ -169,6 +169,12 @@ def get_new_deaths_growth_rate(graph: WeightedGraph, start: Optional[_WeightedVe
     given population. For example, if the returned float is 0.01, then the average daily new deaths
     is 0.01 of a country's population.
 
+    This is calculated by traversing through the graph starting from the start vertex without
+    visiting any vertex in visited and collecting the average number of new cases for countries
+    that meet the specific policy level. The specific weight of each edge will also be taken
+    into account (Refer to _WeightedVertex.get_neighbour_average_cases for more details.
+    If no start vertex is provided, find a vertex randomly that meets the criteria to begin.
+
     If there is no country with the specific policy level, calculate the average for
     the level of policy that is one above and one below (if available), then get the average of
     the two. Refer to _get_new_deaths_special().
@@ -265,11 +271,6 @@ def _get_new_deaths_special(graph: WeightedGraph, policy: str, level: int) -> fl
 def get_final_deaths_average(graph: WeightedGraph, policy: str, level: int) -> float:
     """This function make use of get_new_cases_growth_rate between 5 to 10 times (chosen randomly)
     to get a final average of the number of new cases based on the given policy level.
-
-    This is done because there is an element of randomness for get_new_cases_growth_rate,
-    as the starting country for traversal is chosen at random from the dict, and this will affect
-    the weight of the edges as the graph is traversed. To mitigate this, we will do
-    between 5 - 10 traversals and get the average from it.
 
     The returned float gives the average of number of new deaths every day in terms of the
     percentage of a given population. For example, if the returned float is 0.01, then the average
@@ -375,7 +376,7 @@ def get_exact_case_average(graph: WeightedGraph, lst: list[str]) -> float:
 
 
 def get_exact_deaths_average(graph: WeightedGraph, lst: list[str]) -> float:
-    """Return the exact average daily case count from the list of countries.
+    """Return the exact average daily death count from the list of countries.
 
     >>> import init_graph
     >>> g = init_graph.get_test_graph()
@@ -402,7 +403,9 @@ def get_total_average_case_growth(graph: WeightedGraph, policies: dict[str, int]
     is 0.01 of a country's population.
 
     This is calculated by calculating the case average of each policies, then taking the average
-    of that.
+    of that. This function makes use of get_final_case_average when there is no country
+    that meets the given policies, and get_exact_case_average when there is at least one country
+    that meets the given policies requirements.
 
     Preconditions:
         - 0 < len(policies) <= 6
@@ -436,7 +439,9 @@ def get_total_average_deaths_growth(graph: WeightedGraph, policies: dict[str, in
     is 0.01 of a country's population.
 
     This is calculated by calculating the death average of each policies, then taking the average
-    of that.
+    of that. This function makes use of get_final_deaths_average when there is no country
+    that meets the given policies, and get_exact_deaths_average when there is at least one country
+    that meets the given policies requirements.
 
     Preconditions:
         - 0 < len(policies) <= 6

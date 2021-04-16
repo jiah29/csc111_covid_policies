@@ -6,8 +6,9 @@ Instructions (READ THIS FIRST!)
 This Python module contains the main functions for users to call and
 generate output, or to interact with the program as a whole.
 
-Do not edit any function statements in this module, unless otherwise
-specified.
+Do not edit any function statements in this module, besides
+commenting/uncommenting functions or changing the function argument
+for plot_simulation.
 
 Copyright and Usage Information
 ===============================

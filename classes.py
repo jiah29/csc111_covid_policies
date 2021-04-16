@@ -3,10 +3,10 @@
 Instructions (READ THIS FIRST!)
 ===============================
 
-This Python module contains the information and methods of
+This Python module contains the information and methods for
 the two main classes (and an exception class) used in this project.
 
-Do not edit any function in this module.
+Do not edit any classes/methods in this module.
 
 Copyright and Usage Information
 ===============================
@@ -28,11 +28,11 @@ class _WeightedVertex:
 
         Instance Attributes:
             - country_name: The name of the country
-            - new_cases: The list of number of new cases every day from a specific starting data
-                         to a specific ending data.
-            - new_deaths: The list of number of new deaths every day from a specific starting data
-                         to a specific ending data.
-            - population: The size of the population
+            - new_cases: The list of number of new cases every day in the country. Each entry
+                         represents the number of new cases for a particular day.
+            - new_deaths: The list of number of new deaths every day in the country. Each entry
+                          represents the number of new cases for a particular day.
+            - population: The size of the country's population
             - restrictions_level: The mapping of each policy to its level of restriction. If a
                                   restriction level is not available, it will be represented with a
                                   empty str ''.
@@ -57,7 +57,6 @@ class _WeightedVertex:
 
         Preconditions:
             - population >= 100
-            - len(cases) == len(deaths)
         """
         self.country_name = country
         self.new_cases = cases
@@ -158,7 +157,7 @@ class _WeightedVertex:
         """Return the averages of daily new cases of the neighbours of the vertex by traversing
         through the neighbour of the neighbour. The average daily new cases is calculated by taking
         an average of all the new cases divided by the population of the vertex,
-        then multiplied by the similarity score of self.
+        then multiplied by the similarity score with self.
 
         >>> v1 = _WeightedVertex('c1', [0.1], [0.1], 10000)
         >>> v2 = _WeightedVertex('c2', [0.1], [0.1], 10000)

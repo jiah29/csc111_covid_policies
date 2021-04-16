@@ -100,7 +100,7 @@ def plot_face_masks(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
     """Display a world map showing how countries are connected based on the level of restriction
     on a policy.
 
-    This function is specifically for face covering policies with five levels
+    This function is specifically for face covering policies with five levels.
 
     Preconditions:
         - len(graphs) == 5
@@ -313,7 +313,8 @@ def plot_three_levels(graphs: list[nx.Graph], policy: str, messages: dict[int, s
     """Display a world map showing how countries are connected based on the level of restriction
     on a policy.
 
-    This function is specifically for policies with three levels.
+    This function is specifically for policies with three levels, and
+    is similar to plot_face_masks.
 
     Preconditions:
         - len(graphs) == 3
@@ -460,7 +461,8 @@ def plot_four_levels(graphs: list[nx.Graph], policy: str, messages: dict[int, st
     """Display a world map showing how countries are connected based on the level of restriction
     on a policy.
 
-    This function is specifically for policies with 4 levels
+    This function is specifically for policies with 4 levels, and
+    is similar to plot_face_masks.
 
     Preconditions:
         - len(graphs) == 4
@@ -646,7 +648,8 @@ def plot_vaccination(graphs: list[nx.Graph], messages: dict[int, str]) -> None:
     """Display a world map showing how countries are connected based on the level of restriction
     on a policy.
 
-    This function is specifically for vaccination policy, with six levels
+    This function is specifically for vaccination policy, with six levels, and it is
+    is similar to plot_face_masks.
 
     Preconditions:
         - len(graphs) == 6
