@@ -5,4 +5,8 @@ Since the emergence of COVID-19 in 2019, governments across the world have had t
 
 In this project, we are interested in analyzing the efficacy of global policy responses concerning stay-at-home restrictions, school and workplace closures, cancellation of public events and gatherings, public information campaigns, face coverings, testing and contact tracing, and vaccination policies in reducing deaths and cases. In doing so, we hope to learn more about the interconnections between policies and their role in reducing transmission of COVID-19, and shed light on the policy response(s) that have been most effective in their respective regions. 
 
+Refer to project_report.pdf for detailed computations plan and finding.
+
+Last updated: April 30, 2021
+
 Copyright 2021 @ Jia Hao Choo & Komal Saini
